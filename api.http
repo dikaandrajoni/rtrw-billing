@@ -1,0 +1,83 @@
+### Variabel
+@base = http://localhost:8080
+
+### Dashboard
+GET {{base}}/api/dashboard
+
+### Daftar paket
+GET {{base}}/api/plans
+
+### Tambah paket
+POST {{base}}/api/plans
+Content-Type: application/json
+
+{ "name": "Home 30 Mbps", "speed": "30M/30M", "monthlyPrice": 250000, "mikrotikProfile": "paket-30m" }
+
+### Daftar router
+GET {{base}}/api/routers
+
+### Cek router sekarang
+POST {{base}}/api/routers/1/check
+
+### Cari pelanggan
+GET {{base}}/api/customers?q=budi
+
+### Daftarkan pelanggan baru (otomatis buat user PPPoE)
+POST {{base}}/api/customers
+Content-Type: application/json
+
+{
+  "name": "Rina Marlina",
+  "phone": "6281200000004",
+  "address": "Jl. Sudirman 4",
+  "pppoeUsername": "rina",
+  "pppoePassword": "rina12345",
+  "planId": 1,
+  "routerId": 1,
+  "dueDay": 10
+}
+
+### Ganti paket
+PUT {{base}}/api/customers/1/plan
+Content-Type: application/json
+
+{ "planId": 2 }
+
+### Terbitkan tagihan bulan ini
+POST {{base}}/api/invoices/generate
+
+### Lihat tagihan bulan ini
+GET {{base}}/api/invoices
+
+### Bayar tagihan
+POST {{base}}/api/invoices/1/pay
+Content-Type: application/json
+
+{ "method": "QRIS" }
+
+### Jalankan isolir otomatis sekarang
+POST {{base}}/api/invoices/isolate-overdue
+
+### Isolir manual
+POST {{base}}/api/customers/2/isolate
+
+### Buka tiket gangguan
+POST {{base}}/api/tickets
+Content-Type: application/json
+
+{ "customerId": 1, "subject": "Internet mati", "description": "Lampu LOS merah", "category": "NO_INTERNET" }
+
+### Tugaskan teknisi
+POST {{base}}/api/tickets/1/assign
+Content-Type: application/json
+
+{ "technician": "Rudi" }
+
+### Selesaikan tiket
+POST {{base}}/api/tickets/1/resolve
+Content-Type: application/json
+
+{ "note": "Ganti patchcord di ODP" }
+
+### Antrian tiket terbuka
+GET {{base}}/api/tickets

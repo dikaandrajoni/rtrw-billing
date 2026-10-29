@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+billing:
+  grace-days: 3
+  mikrotik:
+    mode: FAKE
+    isolation-profile: isolir
+  whatsapp:
+    provider: LOG
+  schedule:
+    enabled: false
+  demo-data: false

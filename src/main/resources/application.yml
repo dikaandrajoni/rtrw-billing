@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: rtrw-billing
+  datasource:
+    # Default: H2 file database supaya bisa langsung dicoba. Untuk produksi pakai profile "prod".
+    url: jdbc:h2:file:./data/rtrw-billing;MODE=PostgreSQL;AUTO_SERVER=TRUE
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  h2:
+    console:
+      enabled: true
+  jackson:
+    time-zone: Asia/Jakarta
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+billing:
+  company-name: "RT/RW Net Sejahtera"
+  grace-days: 3
+  reminder-days-before: 3
+  mikrotik:
+    mode: FAKE            # FAKE = tanpa router, REST = RouterOS v7 asli
+    isolation-profile: isolir
+    timeout: 5s
+  whatsapp:
+    provider: LOG         # LOG = cetak ke log, FONNTE = kirim via api.fonnte.com
+    token: ${FONNTE_TOKEN:}
+    admin-phone: ${ADMIN_PHONE:}
+  schedule:
+    enabled: true
+    generate-invoices: "0 0 6 1 * *"
+    reminders: "0 0 9 * * *"
+    isolate-overdue: "0 5 0 * * *"
+    monitor-interval-ms: 60000
+  demo-data: true         # isi paket, router, dan pelanggan contoh saat database masih kosong
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/rtrw_billing}
+    username: ${DB_USERNAME:rtrw}
+    password: ${DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: update    # untuk produksi serius, ganti ke Flyway migration + validate
+  h2:
+    console:
+      enabled: false
+
+billing:
+  mikrotik:
+    mode: REST
+  whatsapp:
+    provider: FONNTE
+  demo-data: false
